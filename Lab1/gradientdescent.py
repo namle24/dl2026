@@ -9,7 +9,7 @@ def GradientDescent (x, lr, thread_hold):
 	while abs(f(x)> thread_hold):
 		x = x - lr * df(x)
 		count += 1
-		print(f"{count} {x} {df(x)}")
+		print(f"{count} {x} {df(x)} {f(x)}")
 
 if __name__ == "__main__":
 	x = 10
