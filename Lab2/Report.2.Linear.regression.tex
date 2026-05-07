@@ -1,0 +1,87 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+
+\title{Report 2: Linear Regression}
+\author{Hoai Nam Le - 2540079}
+
+\begin{document}
+
+\maketitle
+
+\section{Implementation}
+
+Linear Regression was implemented from scratch using Gradient Descent.
+
+Linear model:
+
+\[
+y = w_1x + w_0
+\]
+
+Loss function:
+
+\[
+J = \frac{1}{2N}\sum_{i=1}^{N}(w_1x_i + w_0 - y_i)^2
+\]
+
+Gradients:
+
+\[
+\frac{\partial J}{\partial w_0}
+=
+\frac{1}{N}\sum_{i=1}^{N}(w_1x_i + w_0 - y_i)
+\]
+
+\[
+\frac{\partial J}{\partial w_1}
+=
+\frac{1}{N}\sum_{i=1}^{N}x_i(w_1x_i + w_0 - y_i)
+\]
+
+Update rules:
+
+\[
+w_0 = w_0 - r\frac{\partial J}{\partial w_0}
+\]
+
+\[
+w_1 = w_1 - r\frac{\partial J}{\partial w_1}
+\]
+
+The program:
+\begin{itemize}
+    \item Reads data from a CSV file
+    \item Computes gradients
+    \item Updates $w_0$ and $w_1$
+    \item Prints intermediate iterative steps
+    \item Stops when the loss is small enough
+\end{itemize}
+
+\section{Learning Rate Analysis}
+
+Different learning rates were tested.
+
+\begin{itemize}
+    \item Large learning rate (0.01, 0.1): divergence
+    \item Small learning rate (0.000001): very slow convergence
+    \item Learning rate 0.0001: stable convergence
+\end{itemize}
+
+Final parameters:
+
+\[
+w_0 = -1.016
+\]
+
+\[
+w_1 = 15.882
+\]
+
+Final model:
+
+\[
+y = 15.882x - 1.016
+\]
+
+\end{document}
