@@ -1,0 +1,98 @@
+\documentclass{article}
+
+\usepackage{amsmath}
+
+\title{Report 3: Logistic Regression}
+\author{Hoai Nam Le}
+
+\begin{document}
+
+\maketitle
+
+\section{Implementation}
+
+Logistic Regression was implemented from scratch using
+Gradient Descent.
+
+Prediction model:
+
+\[
+\hat{y} = \sigma(w_1x_1 + w_2x_2 + w_0)
+\]
+
+Sigmoid function:
+
+\[
+\sigma(z) = \frac{1}{1 + e^{-z}}
+\]
+
+Binary cross entropy loss:
+
+\[
+J =
+-\frac{1}{N}
+\sum_{i=1}^{N}
+(y_i\log(\hat{y_i})
++
+(1-y_i)\log(1-\hat{y_i}))
+\]
+
+Gradient descent update rules:
+
+\[
+w_0 = w_0 - r\frac{\partial J}{\partial w_0}
+\]
+
+\[
+w_1 = w_1 - r\frac{\partial J}{\partial w_1}
+\]
+
+\[
+w_2 = w_2 - r\frac{\partial J}{\partial w_2}
+\]
+
+The program:
+\begin{itemize}
+    \item Reads data from a CSV file
+    \item Computes sigmoid prediction
+    \item Computes binary cross entropy loss
+    \item Updates $w_0$, $w_1$, $w_2$
+    \item Prints intermediate iterative steps
+\end{itemize}
+
+\section{Learning Rate Analysis}
+
+Different learning rates were tested.
+
+\begin{itemize}
+    \item Large learning rate (1.0):
+    unstable convergence
+    
+    \item Small learning rate (0.001):
+    very slow convergence
+    
+    \item Learning rate 0.1:
+    stable convergence
+\end{itemize}
+
+Final parameters:
+
+\[
+w_0 = -18.602
+\]
+
+\[
+w_1 = 5.809
+\]
+
+\[
+w_2 = 1.797
+\]
+
+Final loss:
+
+\[
+Loss = 0.1983
+\]
+
+\end{document}
