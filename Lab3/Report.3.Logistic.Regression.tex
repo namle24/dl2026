@@ -1,6 +1,7 @@
 \documentclass{article}
 
 \usepackage{amsmath}
+\usepackage{graphicx}
 
 \title{Report 3: Logistic Regression}
 \author{Hoai Nam Le}
@@ -60,20 +61,7 @@ The program:
     \item Prints intermediate iterative steps
 \end{itemize}
 
-\section{Learning Rate Analysis}
-
-Different learning rates were tested.
-
-\begin{itemize}
-    \item Large learning rate (1.0):
-    unstable convergence
-    
-    \item Small learning rate (0.001):
-    very slow convergence
-    
-    \item Learning rate 0.1:
-    stable convergence
-\end{itemize}
+\section{Result}
 
 Final parameters:
 
@@ -94,5 +82,26 @@ Final loss:
 \[
 Loss = 0.1983
 \]
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=0.7\linewidth]{Figure_1.png}
+    \caption{Logistic Regression Visualization}
+\end{figure}
+
+\section{Learning Rate Analysis}
+
+Different learning rates were tested.
+
+\begin{itemize}
+    \item Large learning rate (1.0):
+    unstable convergence
+    
+    \item Small learning rate (0.001):
+    very slow convergence
+    
+    \item Learning rate 0.1:
+    stable convergence
+\end{itemize}
 
 \end{document}
