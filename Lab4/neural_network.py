@@ -62,15 +62,15 @@ class NeuralNetwork:
 if __name__ == "__main__":
     nn = NeuralNetwork("network.txt")
     # hidden layer
-    nn.layers[0].neurons[0].weights = [-10, -10]
-    nn.layers[0].neurons[0].bias = 15
+    nn.layers[0].neurons[0].weights = [-1.0, -1.0]
+    nn.layers[0].neurons[0].bias = 1.5
 
-    nn.layers[0].neurons[1].weights = [10, 10]
-    nn.layers[0].neurons[1].bias = -5
+    nn.layers[0].neurons[1].weights = [1.0, 1.0]
+    nn.layers[0].neurons[1].bias = -0.5
 
     # output layer
-    nn.layers[1].neurons[0].weights = [10, 10]
-    nn.layers[1].neurons[0].bias = -15
+    nn.layers[1].neurons[0].weights = [1.0, 1.0]
+    nn.layers[1].neurons[0].bias = -1.5
 
     test_data = [
         [0, 0],
