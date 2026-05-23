@@ -1,0 +1,193 @@
+import numpy as np
+import cv2
+import os
+import random
+E = 2.718281828459045
+
+def relu(x):
+    return np.maximum(0, x)
+
+
+def drelu(x):
+    return (x > 0).astype(float)
+
+
+def softmax(x):
+
+    exp_x = np.exp(x - np.max(x))
+
+    return exp_x / np.sum(exp_x)
+
+
+class ConvLayer:
+
+    def __init__(self, kernel_size):
+
+        self.kernel = np.random.randn(
+            kernel_size,
+            kernel_size
+        ) * 0.01
+
+    def forward(self, image):
+
+        self.image = image
+
+        h, w = image.shape
+
+        k = self.kernel.shape[0]
+
+        output = np.zeros((h-k+1, w-k+1))
+
+        for i in range(h-k+1):
+            for j in range(w-k+1):
+
+                region = image[i:i+k, j:j+k]
+
+                output[i, j] = np.sum(
+                    region * self.kernel
+                )
+
+        return output
+
+
+class MaxPool:
+
+    def forward(self, image):
+
+        h, w = image.shape
+
+        output = np.zeros((h//2, w//2))
+
+        for i in range(0, h, 2):
+            for j in range(0, w, 2):
+
+                region = image[i:i+2, j:j+2]
+
+                output[i//2, j//2] = np.max(region)
+
+        return output
+
+
+class FullyConnected:
+
+    def __init__(self, input_size, output_size):
+
+        self.weights = np.random.randn(
+            input_size,
+            output_size
+        ) * 0.01
+
+        self.bias = np.zeros(output_size)
+
+    def forward(self, x):
+
+        self.input = x
+
+        return np.dot(x, self.weights) + self.bias
+
+
+class CNN:
+
+    def __init__(self):
+
+        self.conv1 = ConvLayer(3)
+
+        self.pool1 = MaxPool()
+
+        self.fc1 = FullyConnected(
+            13 * 13,
+            10
+        )
+
+    def forward(self, image):
+
+        x = self.conv1.forward(image)
+
+        x = relu(x)
+
+        x = self.pool1.forward(x)
+
+        x = x.flatten()
+
+        x = self.fc1.forward(x)
+
+        x = softmax(x)
+
+        return x
+
+
+def load_dataset(path, limit=100):
+
+    images = []
+
+    labels = []
+
+    for label in range(10):
+
+        folder = os.path.join(
+            path,
+            str(label)
+        )
+
+        count = 0
+
+        for filename in os.listdir(folder):
+
+            img_path = os.path.join(
+                folder,
+                filename
+            )
+
+            image = cv2.imread(
+                img_path,
+                cv2.IMREAD_GRAYSCALE
+            )
+
+            image = cv2.resize(image, (28,28))
+
+            image = image / 255.0
+
+            images.append(image)
+
+            labels.append(label)
+
+            count += 1
+
+            if count >= limit:
+                break
+
+    return images, labels
+
+
+if __name__ == "__main__":
+
+    cnn = CNN()
+
+    train_images, train_labels = load_dataset(
+        "train",
+        limit=100
+    )
+
+    correct = 0
+
+    for i in range(len(train_images)):
+
+        output = cnn.forward(
+            train_images[i]
+        )
+
+        prediction = np.argmax(output)
+
+        if prediction == train_labels[i]:
+            correct += 1
+
+        print(
+            "Real:",
+            train_labels[i],
+            "Pred:",
+            prediction
+        )
+
+    accuracy = correct / len(train_images)
+
+    print("\nAccuracy =", accuracy)
