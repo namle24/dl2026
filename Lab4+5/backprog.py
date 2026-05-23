@@ -70,33 +70,20 @@ class NeuralNetwork:
 
         for i in range(len(hidden_layer.neurons)):
             neuron = hidden_layer.neurons[i]
-            neuron.delta = (
-                output_neuron.weights[i]
-                * output_neuron.delta
-                * dsigmoid(neuron.output)
-            )
+            neuron.delta = ( output_neuron.weights[i] * output_neuron.delta * dsigmoid(neuron.output))
 
         hidden_outputs = []
         for neuron in hidden_layer.neurons:
             hidden_outputs.append(neuron.output)
 
         for i in range(len(output_neuron.weights)):
-            output_neuron.weights[i] += (
-                lr
-                * output_neuron.delta
-                * hidden_outputs[i]
-            )
+            output_neuron.weights[i] += (lr * output_neuron.delta * hidden_outputs[i])
 
         output_neuron.bias += lr * output_neuron.delta
         # update hidden layer
         for neuron in hidden_layer.neurons:
-
             for i in range(len(neuron.weights)):
-                neuron.weights[i] += (
-                    lr
-                    * neuron.delta
-                    * inputs[i]
-                )
+                neuron.weights[i] += (lr * neuron.delta * inputs[i])
             neuron.bias += lr * neuron.delta
 
         return error * error
@@ -108,10 +95,7 @@ class NeuralNetwork:
             lines = file.readlines()[1:]
             for line in lines:
                 row = line.strip().split(",")
-                X.append([
-                    float(row[0]),
-                    float(row[1])
-                ])
+                X.append([float(row[0]), float(row[1])])
                 Y.append(float(row[2]))
         return X, Y
 
@@ -127,11 +111,7 @@ if __name__ == "__main__":
     while total_loss > threshold:
         total_loss = 0
         for i in range(len(X)):
-            total_loss += nn.backpropagation(
-                X[i],
-                Y[i],
-                lr
-            )
+            total_loss += nn.backpropagation(X[i], Y[i], lr)
         
         if epoch % 1000 == 0 and epoch > 0:
             print(f"Epoch {epoch}, Loss = {total_loss:.6f}")
