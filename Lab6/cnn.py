@@ -2,6 +2,7 @@ import os
 import random
 import cv2
 import numpy as np
+import matplotlib.pyplot as plt
 
 E = 2.718281828459045
 
@@ -9,15 +10,12 @@ E = 2.718281828459045
 def relu(x):
     return np.maximum(0, x)
 
-
 def drelu(x):
     return (x > 0).astype(float)
-
 
 def softmax(x):
     exp_x = np.exp(x - np.max(x))
     return exp_x / np.sum(exp_x)
-
 
 class ConvLayer:
 
@@ -74,11 +72,22 @@ class CNN:
         x = self.conv1.forward(image)
         x = relu(x)
         x = self.pool1.forward(x)
-        x = x.flatten()
-        x = self.fc1.forward(x)
+        self.features = x.flatten()
+        x = self.fc1.forward(self.features)
         x = softmax(x)
         return x
-
+    
+    def train(self, image, label, lr):
+        output = self.forward(image)
+        target = np.zeros(10)
+        target[label] = 1
+        loss = -np.log(output[label] + 1e-15)
+        error = output - target
+        dW = np.outer(self.features, error)
+        db = error
+        self.fc1.weights -= lr * dW
+        self.fc1.bias -= lr * db
+        return loss
 
 def load_mnist_dataset(path, limit=100):
     images_path = os.path.join(path, "train-images-idx3-ubyte")
@@ -103,18 +112,29 @@ def load_mnist_dataset(path, limit=100):
 
 if __name__ == "__main__":
     cnn = CNN()
-    train_images, train_labels = load_mnist_dataset("mnist_dataset", limit=100)
-
+    train_images, train_labels = load_mnist_dataset("mnist_dataset",limit=1000)
+    lr = 0.1
+    epochs = 100
+    loss_history = []
+    for epoch in range(epochs):
+        total_loss = 0
+        for i in range(len(train_images)):
+            loss = cnn.train(train_images[i],train_labels[i],lr)
+            total_loss += loss
+        avg_loss = total_loss / len(train_images)
+        loss_history.append(avg_loss)
+        print(f"Epoch {epoch+1}, Loss = {avg_loss:.4f}")
     correct = 0
     for i in range(len(train_images)):
         output = cnn.forward(train_images[i])
         prediction = np.argmax(output)
-
         if prediction == train_labels[i]:
             correct += 1
-
-        print(f"Real: {train_labels[i]} | Pred: {prediction}")
-
     accuracy = correct / len(train_images)
     print(f"\nAccuracy = {accuracy:.2f}")
-
+    plt.plot(loss_history)
+    plt.xlabel("Epoch")
+    plt.ylabel("Loss")
+    plt.title("Training Loss Curve")
+    plt.savefig("loss_curve.png")
+    plt.show()
